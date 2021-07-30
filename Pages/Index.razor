@@ -1,0 +1,36 @@
+﻿@page "/"
+@inject TodoContext Ctx
+
+<h1>Hello, world!</h1>
+
+Welcome to your new app.
+
+<button @onclick="()=>LoadIt()">Load it</button>
+
+@code {
+
+	public List<Todo> TodoList = new List<Todo>();
+
+	protected override void OnInitialized()
+	{
+		Ctx.Database.EnsureDeleted();
+		Ctx.Database.EnsureCreated();
+
+		Ctx.TodoList.AddRange(new Todo[]
+		{
+	new Todo { TaskDesc = "get SQLite running in Wasm", Completed = false},
+		new Todo { TaskDesc = "make Dan happy", Completed = false},
+		});
+
+		Ctx.SaveChanges();
+
+	}
+
+	public void LoadIt()
+	{
+		TodoList.Clear();
+		TodoList.AddRange(Ctx.TodoList.ToList());
+	}
+
+
+}
